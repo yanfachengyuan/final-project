@@ -5,12 +5,12 @@
         <img src="../assets/logo.png" alt />
       </div>
       <div class="login_form">
-        <el-form ref="form" :model="form">
-          <el-form-item class="info">
+        <el-form ref="form" :model="form" :rules="loginRules">
+          <el-form-item class="info" prop="loginName">
             <el-input v-model="form.username" prefix-icon="el-icon-user"></el-input>
           </el-form-item>
-          <el-form-item class="info">
-            <el-input v-model="form.password" prefix-icon="el-icon-lock"></el-input>
+          <el-form-item class="info" prop="loginPsd">
+            <el-input v-model="form.password" prefix-icon="el-icon-lock" type="password"></el-input>
           </el-form-item>
           <el-form-item class="btns">
             <el-button type="primary" @click="onSubmit">登陆</el-button>
@@ -27,18 +27,28 @@ export default {
   data() {
     return {
       form: {
-        username: "",
-        password: "",
+        username: "admin",
+        password: "123456",
       },
+      loginRules:{
+          loginName:[
+              {required:true,message:'请输入用户名',trigger:'blur'},
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          loginPsd:[
+              {required:true,message:'请输入密码',trigger:'blur'},
+            { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+          ]
+      }
     };
   },
   methods: {
     onSubmit() {
-      this.$axios.post('http://127.0.0.1:8888/api/private/v1/login',this.form).then(res=>{
+      this.$axios.post('login',this.form).then(res=>{
           console.log(res.data)
       })
       this.$message({
-          message: '恭喜你，这是一条成功消息',
+          message: '登陆成功',
           type: 'success'
         });
       console.log(this.form)
@@ -76,7 +86,7 @@ export default {
     }
     .login_form {
       width: 100%;
-      padding: 80px 0 0 0;
+      padding: 60px 0 0 0;
     }
   }
 }
@@ -87,6 +97,6 @@ export default {
 }
 .info{
     width: 80%;
-    margin: 10px auto;
+    margin: 20px auto;
 }
 </style>
