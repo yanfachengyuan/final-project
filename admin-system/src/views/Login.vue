@@ -30,28 +30,32 @@ export default {
         username: "admin",
         password: "123456",
       },
-      loginRules:{
-          loginName:[
-              {required:true,message:'请输入用户名',trigger:'blur'},
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          loginPsd:[
-              {required:true,message:'请输入密码',trigger:'blur'},
-            { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
-          ]
-      }
+      loginRules: {
+        loginName: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        ],
+        loginPsd: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 10,
+            message: "长度在 6 到 10 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
-    onSubmit() {
-      this.$axios.post('login',this.form).then(res=>{
-          console.log(res.data)
-      })
+    async onSubmit() {
+      let { data } = await this.$axios.post("login", this.form);
+      window.sessionStorage.setItem("token", data.data.token);
       this.$message({
-          message: '登陆成功',
-          type: 'success'
-        });
-      console.log(this.form)
+        message: data.meta.message,
+        type: "success",
+      });
+      this.$router.push("/home");
     },
   },
 };
@@ -90,13 +94,13 @@ export default {
     }
   }
 }
-.btns{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 30px;
+.btns {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
 }
-.info{
-    width: 80%;
-    margin: 20px auto;
+.info {
+  width: 80%;
+  margin: 20px auto;
 }
 </style>
